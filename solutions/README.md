@@ -1,9 +1,10 @@
 # Day 2 Operations with OpenShift Virtualization and Ansible Automation Platform- Solution Collection
 
-Welcome to the solution collection for the **Day 2 Operations on OpenShift
-Virtualization** lab. This repository contains all the necessary resources,
-playbooks, and configurations to implement and automate the tasks demonstrated
-in the lab using the Ansible Automation Platform (AAP).
+Welcome to the solution collection for the **Day 2 Operations with OpenShift
+Virtualization and Ansible Automation Platform** lab. This repository contains
+all the necessary resources, playbooks, and configurations to implement and
+automate the tasks demonstrated in the lab using the Ansible Automation Platform
+(AAP).
 
 ## About the Lab
 
