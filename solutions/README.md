@@ -1,4 +1,4 @@
-# Day 2 Operations on OpenShift Virtualization - Solution Collection
+# Day 2 Operations with OpenShift Virtualization and Ansible Automation Platform- Solution Collection
 
 Welcome to the solution collection for the **Day 2 Operations on OpenShift
 Virtualization** lab. This repository contains all the necessary resources,
