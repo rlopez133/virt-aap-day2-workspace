@@ -2,8 +2,8 @@
 
 Welcome to the **virt-aap-day2-workspace** repository! This repository is
 designed to support **Day 2 operations** for Virtual Machines (VMs) on OpenShift
-Virtualization using the **Ansible Automation Platform (AAP)**. It contains all
-the necessary playbooks, roles, configurations, and resources to manage, patch,
+Virtualization using **Ansible Automation Platform (AAP)**. It contains all
+the necessary playbooks and roles to manage, patch,
 and maintain VMs effectively in a dynamic OpenShift environment.
 
 ## Repository Structure
@@ -19,7 +19,7 @@ This repository is organized to provide clear guidance on automating Day 2 opera
   - `backup_restore_vm_playbook.yml`: Backs up and restores VMs.
 
 - **Dynamic Inventory Configuration**:
-  Details to create an AAP inventory  to dynamically integrate OpenShift-hosted VMs into Ansible Automation Platform (AAP).
+  - Details to create an AAP inventory  to dynamically integrate OpenShift-hosted VMs into Ansible Automation Platform (AAP).
 
 ## Features
 
