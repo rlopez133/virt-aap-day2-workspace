@@ -45,6 +45,7 @@ Below is an example playbook demonstrating how to use the `vm_management` role:
   hosts: localhost
   roles:
     - redhatone.vm_management.vm_management
+```
 
 License
 -------
