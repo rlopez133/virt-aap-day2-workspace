@@ -1,31 +1,51 @@
-Role Name
+vm_management
 =========
 
-A brief description of the role goes here.
+A role for managing Virtual Machines (VMs) on OpenShift Virtualization using the
+Ansible Automation Platform (AAP). This role is designed to streamline Day 2
+operations for VMs, such as lifecycle management, security patching, dynamic
+inventory integration, and backup and restore processes.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Ansible Automation Platform (AAP) controller set up and operational.
+- Required execution environment (`Day2 EE`) with the
+  `redhat.openshift_virtualization` version >= 2.0.1  and `redhat.openshift` >=3.1.0 collections installed.
+- Necessary credentials to access and manage VMs configured in OpenShift within AAP.
+- OpenShift cluster with accessible VMs.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+The following variables can be customized to suit your environment and
+requirements:
+
+- `vm_name`: Name of the Virtual Machine to manage.
+- `vm_namespace`: Namespace where the VM resides.
+- `task_file`: The name of the file you wish to run your manage_vm_playbook.yml against
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+This role depends on the following collections and modules:
+- `redhat.openshift_virtualization`
+- `redhat.openshift`
+- `kubernetes.core`
+
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Below is an example playbook demonstrating how to use the `vm_management` role:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```yaml
+---
+- name: Manage a Virtual Machine
+  hosts: localhost
+  roles:
+    - redhatone.vm_management.vm_management
+```
 
 License
 -------
@@ -35,4 +55,5 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Roger Lopez
+
