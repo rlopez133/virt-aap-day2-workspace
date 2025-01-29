@@ -12,7 +12,7 @@
   redhat.openshift_virtualization.kubevirt_vm:
     name: "{{ item.metadata.name }}"
     namespace: "{{ item.metadata.namespace }}"
-    running: false
+    run_strategy: Halted
     wait: true
   loop: "{{ vm_info.resources }}"
   loop_control:
@@ -26,5 +26,5 @@
 #  redhat.openshift_virtualization.kubevirt_vm:
 #    name: "{{ vm_name }}"
 #    namespace: "{{ vm_namespace }}"
-#    running: false
+#    run_strategy: Halted
 #    wait: true

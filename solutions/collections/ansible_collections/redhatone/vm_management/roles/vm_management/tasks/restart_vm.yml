@@ -1,0 +1,33 @@
+
+---
+- name: Get all Virtual Machines in the namespace
+  redhat.openshift_virtualization.kubevirt_vm_info:
+    namespace: "{{ vm_namespace }}"
+  register: vm_info
+
+- name: Stop Running Virtual Machines
+  redhat.openshift_virtualization.kubevirt_vm:
+    name: "{{ item.metadata.name }}"
+    namespace: "{{ item.metadata.namespace }}"
+    run_strategy: Halted
+    wait: true
+  loop: "{{ vm_info.resources }}"
+  loop_control:
+    label: "{{ item.metadata.name }}"
+  when: item.status.printableStatus == "Running"
+
+- name: Refresh VM info after stopping
+  redhat.openshift_virtualization.kubevirt_vm_info:
+    namespace: "{{ vm_namespace }}"
+  register: updated_vm_info
+
+- name: Start the Virtual Machines
+  redhat.openshift_virtualization.kubevirt_vm:
+    name: "{{ item.metadata.name }}"
+    namespace: "{{ item.metadata.namespace }}"
+    run_strategy: Always
+    wait: true
+  loop: "{{ updated_vm_info.resources }}"
+  loop_control:
+    label: "{{ item.metadata.name }}"
+  when: item.status.printableStatus != "Running"
