@@ -3,6 +3,7 @@
     name: "rhel9-vm1"
     namespace: "{{ vm_namespace }}"
     state: present
+    run_strategy: Always
     instancetype:
       name: "{{ instance_type }}"
       revisionName: ""
