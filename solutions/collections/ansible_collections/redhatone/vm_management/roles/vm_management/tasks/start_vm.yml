@@ -8,12 +8,15 @@
   ansible.builtin.debug:
     var: vm_info
 
-- name: Start the VirtualMachines
-  redhat.openshift_virtualization.kubevirt_vm:
-    name: "{{ item.metadata.name }}"
-    namespace: "{{ item.metadata.namespace }}"
-    run_strategy: Always
-    wait: true
+- name: Start VM using OpenShift API
+  ansible.builtin.uri:
+    url: "{{ OCP_HOST }}/apis/subresources.kubevirt.io/v1/namespaces/{{ vm_namespace }}/virtualmachines/{{ item.metadata.name }}/start"
+    method: PUT
+    headers:
+      Authorization: "Bearer {{ OCP_BEARER_TOKEN }}"
+    validate_certs: false
+    status_code:
+      - 202
   loop: "{{ vm_info.resources }}"
   loop_control:
     label: "{{ item.metadata.name }}"
