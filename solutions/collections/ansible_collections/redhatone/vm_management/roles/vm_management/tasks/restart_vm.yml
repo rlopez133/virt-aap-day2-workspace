@@ -1,33 +1,23 @@
-
 ---
-- name: Get all Virtual Machines in the namespace
+- name: Get all VirtualMachines in the namespace
   redhat.openshift_virtualization.kubevirt_vm_info:
     namespace: "{{ vm_namespace }}"
   register: vm_info
 
-- name: Stop Running Virtual Machines
-  redhat.openshift_virtualization.kubevirt_vm:
-    name: "{{ item.metadata.name }}"
-    namespace: "{{ item.metadata.namespace }}"
-    run_strategy: Halted
-    wait: true
+- name: Debug the vm_info variable
+  ansible.builtin.debug:
+    var: vm_info
+
+- name: Restart VM using OpenShift API
+  ansible.builtin.uri:
+    url: "{{ OCP_HOST }}/apis/subresources.kubevirt.io/v1/namespaces/{{ vm_namespace }}/virtualmachines/{{ item.metadata.name }}/restart"
+    method: PUT
+    headers:
+      Authorization: "Bearer {{ OCP_BEARER_TOKEN }}"
+    validate_certs: false
+    status_code:
+      - 202
   loop: "{{ vm_info.resources }}"
   loop_control:
     label: "{{ item.metadata.name }}"
-  when: item.status.printableStatus == "Running"
-
-- name: Refresh VM info after stopping
-  redhat.openshift_virtualization.kubevirt_vm_info:
-    namespace: "{{ vm_namespace }}"
-  register: updated_vm_info
-
-- name: Start the Virtual Machines
-  redhat.openshift_virtualization.kubevirt_vm:
-    name: "{{ item.metadata.name }}"
-    namespace: "{{ item.metadata.namespace }}"
-    run_strategy: Always
-    wait: true
-  loop: "{{ updated_vm_info.resources }}"
-  loop_control:
-    label: "{{ item.metadata.name }}"
-  when: item.status.printableStatus != "Running"
+  when: item.status.printableStatus != "Stopped"
