@@ -8,7 +8,7 @@
     mode: u=rw,go=r
     validate_certs: false
   retries: 10
-  delay: 10
+  delay: 30
 
 - name: Update CA Trust Bundle
   command: update-ca-trust
@@ -22,7 +22,7 @@
   register: r_install_satellite_ca_rpm
   until: not r_install_satellite_ca_rpm.failed
   retries: 10
-  delay: 10
+  delay: 30
 
 - name: Disable Reporting Of Package Profile to Satellite
   community.general.ini_file:
