@@ -1,0 +1,48 @@
+- name: Create Restore
+  block:
+    - name: Stop VM using OpenShift API
+      ansible.builtin.uri:
+        url: >-
+          {{ OCP_HOST }}/apis/subresources.kubevirt.io/v1/namespaces/{{ vm_snapshot_instance.resources[0].metadata.namespace }}/virtualmachines/{{ vm_snapshot_instance.resources[0].metadata.ownerReferences[0].name }}/stop
+        method: PUT
+        headers:
+          Authorization: "Bearer {{ OCP_BEARER_TOKEN }}"
+        validate_certs: false
+        status_code: [202]
+
+    - name: Create Restore
+      redhat.openshift.k8s:
+        state: present
+        definition:
+          apiVersion: snapshot.kubevirt.io/v1alpha1
+          kind: VirtualMachineRestore
+          metadata:
+            generateName: "{{ vm_snapshot_instance.resources[0].metadata.ownerReferences[0].name }}-"
+            namespace: "{{ vm_snapshot_instance.resources[0].metadata.namespace }}"
+            ownerReferences:
+              - apiVersion: kubevirt.io/v1
+                blockOwnerDeletion: false
+                kind: VirtualMachine
+                name: "{{ vm_snapshot_instance.resources[0].metadata.ownerReferences[0].name }}"
+                uid: "{{ vm_snapshot_instance.resources[0].metadata.ownerReferences[0].uid }}"
+          spec:
+            target:
+              apiGroup: kubevirt.io
+              kind: VirtualMachine
+              name: "{{ vm_snapshot_instance.resources[0].metadata.ownerReferences[0].name }}"
+            virtualMachineSnapshotName: "{{ vm_snapshot_instance.resources[0].metadata.name }}"
+      wait: true
+      wait_timeout: 600
+      wait_condition:
+        type: Ready
+
+    - name: Start VM using OpenShift API
+      ansible.builtin.uri:
+        url: >-
+          {{ OCP_HOST }}/apis/subresources.kubevirt.io/v1/namespaces/{{ vm_snapshot_instance.resources[0].metadata.namespace }}/virtualmachines/{{ vm_snapshot_instance.resources[0].metadata.ownerReferences[0].name }}/start
+        method: PUT
+        headers:
+          Authorization: "Bearer {{ OCP_BEARER_TOKEN }}"
+        validate_certs: false
+        status_code: [202]
+  when: "'resources' in vm_snapshot_instance and vm_snapshot_instance.resources | length == 1"
