@@ -10,3 +10,8 @@
   loop: "{{ vm_info.resources | selectattr('metadata.name', 'in', groups['all']) | list }}"
   loop_control:
     label: "{{ item.metadata.name }}"
+
+- name: Show inventory hostnames AAP passed
+  ansible.builtin.debug:
+    var: groups['all']
+
