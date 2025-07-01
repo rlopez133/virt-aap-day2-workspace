@@ -1,0 +1,9 @@
+---
+
+- name: Restore VM Snapshot
+  ansible.builtin.include_tasks:
+    file: _restore_win_vm_snapshots.yml
+  loop_control:
+    loop_var: vm_snapshot
+  loop: "{{ vm_snapshots.replace(' ','').split(',') }}"
+  when: vm_snapshots | default('', True) | length > 0
