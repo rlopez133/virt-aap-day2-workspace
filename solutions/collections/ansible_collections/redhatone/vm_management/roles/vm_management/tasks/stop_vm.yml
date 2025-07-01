@@ -20,7 +20,7 @@
   loop: >-
     {{ vm_info.resources
        | selectattr('metadata.name', 'in',
-           groups['all'] | map('regex_replace', '^sandbox-mdcdn-ocp4-cluster-win-', '') | list
+           groups['all'] | map('regex_replace', '^sandbox-mdcdn-ocp4-cluster-', '') | list
        )
        | list
     }}
