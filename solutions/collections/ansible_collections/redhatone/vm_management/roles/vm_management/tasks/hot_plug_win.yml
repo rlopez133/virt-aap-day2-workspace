@@ -1,3 +1,9 @@
+---
+- name: Get all VirtualMachines in the namespace
+  redhat.openshift_virtualization.kubevirt_vm_info:
+    namespace: "{{ vm_namespace }}"
+  register: vm_info
+
 - name: Hot-add CPU/memory to inventory VMs
   redhat.openshift.k8s:
     api_version: kubevirt.io/v1
