@@ -11,7 +11,16 @@
   loop_control:
     label: "{{ item.metadata.name }}"
 
-- name: Show inventory hostnames AAP passed
+- name: Debug only VMs that match inventory (after stripping prefix)
   ansible.builtin.debug:
-    var: groups['all']
+    var: item.metadata.name
+  loop: >-
+    {{ vm_info.resources
+       | selectattr('metadata.name', 'in',
+           groups['all'] | map('regex_replace', '^sandbox-mdcdn-ocp4-cluster-win-', '') | list
+       )
+       | list
+    }}
+  loop_control:
+    label: "{{ item.metadata.name }}"
 
