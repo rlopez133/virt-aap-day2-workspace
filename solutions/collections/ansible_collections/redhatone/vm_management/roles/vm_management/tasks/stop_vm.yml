@@ -17,7 +17,13 @@
     validate_certs: false
     status_code:
       - 202
-  loop: "{{ vm_info.resources }}"
+  loop: >-
+    {{ vm_info.resources
+       | selectattr('metadata.name', 'in',
+           groups['all'] | map('regex_replace', '^sandbox-mdcdn-ocp4-cluster-win-', '') | list
+       )
+       | list
+    }}
   loop_control:
     label: "{{ item.metadata.name }}"
   when: item.status.printableStatus != "Stopped"
