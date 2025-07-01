@@ -1,0 +1,12 @@
+---
+- name: Get all VirtualMachines in the namespace
+  redhat.openshift_virtualization.kubevirt_vm_info:
+    namespace: "{{ vm_namespace }}"
+  register: vm_info
+
+- name: Debug the vm_info variable
+  ansible.builtin.debug:
+    var: vm_info
+  loop: "{{ vm_info.resources | selectattr('metadata.name', 'in', groups['all']) | list }}"
+  loop_control:
+    label: "{{ item.metadata.name }}"
