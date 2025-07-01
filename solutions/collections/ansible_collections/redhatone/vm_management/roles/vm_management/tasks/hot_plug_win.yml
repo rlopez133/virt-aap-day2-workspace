@@ -1,0 +1,26 @@
+- name: Hot-add CPU/memory to inventory VMs
+  redhat.openshift.k8s:
+    api_version: kubevirt.io/v1
+    kind: VirtualMachine
+    namespace: "{{ vm_namespace }}"
+    name: "{{ item.metadata.name }}"
+    merge_type: merge
+    definition:
+      spec:
+        template:
+          spec:
+            domain:
+              cpu:
+                cores: 8   # desired CPU
+              memory:
+                guest: 32Gi  # desired RAM
+  loop: >-
+    {{ vm_info.resources
+       | selectattr('metadata.name', 'in',
+           groups['all'] | map('regex_replace', '^sandbox-mdcdn-ocp4-cluster-win-', '') | list
+       )
+       | list
+    }}
+  loop_control:
+    label: "{{ item.metadata.name }}"
+  when: item.status.printableStatus == "Running"
