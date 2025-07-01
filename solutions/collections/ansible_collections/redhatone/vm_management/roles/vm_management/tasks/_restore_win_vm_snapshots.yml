@@ -1,3 +1,18 @@
+- name: Verify VM Snapshot Provided
+  ansible.builtin.assert:
+    that:
+      - vm_snapshot | default('', True) | length > 0
+    quiet: True
+    fail_msg: VM Snapshot not specified
+
+- name: Get VirtualMachine Snapshot
+  kubernetes.core.k8s_info:
+    api_version: snapshot.kubevirt.io/v1alpha1
+    kind: VirtualMachineSnapshot
+    namespace: "{{ vm_namespace }}"
+    name: "{{ vm_snapshot }}"
+  register: vm_snapshot_instance
+
 - name: Create Restore
   block:
     - name: Stop VM using OpenShift API
