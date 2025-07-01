@@ -34,6 +34,18 @@
       delay: 10
       until: vm_status.resources[0].status.printableStatus == "Stopped"
 
+    - name: Wait for VMI to be fully deleted
+      kubernetes.core.k8s_info:
+        api_version: kubevirt.io/v1
+        kind: VirtualMachineInstance
+        name: "{{ vm_snapshot_instance.resources[0].metadata.ownerReferences[0].name }}"
+        namespace: "{{ vm_snapshot_instance.resources[0].metadata.namespace }}"
+      register: vmi_info
+      until: vmi_info.resources | length == 0
+      retries: 30
+      delay: 5
+      failed_when: vmi_info.failed is defined and vmi_info.failed
+
     - name: Create Restore
       redhat.openshift.k8s:
         state: present
